@@ -3,6 +3,7 @@ package com.biblioteca.view;
 import com.biblioteca.model.Livro;
 import com.biblioteca.model.LivroDigital;
 import com.biblioteca.model.LivroFisico;
+import com.biblioteca.util.Persistencia;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -109,6 +110,11 @@ public class LivroApp extends Application {
         stage.setScene(scene);
         stage.show();
         atualizarLista();
+
+        stage.setOnCloseRequest(event -> {
+            Persistencia.salvar("livros.dat", livros);
+        });
+
     }
 
     private void atualizarLista() {

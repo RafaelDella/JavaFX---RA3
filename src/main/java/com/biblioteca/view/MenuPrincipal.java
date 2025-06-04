@@ -45,7 +45,7 @@ public class MenuPrincipal extends Application {
 
         aluguelBtn.setOnAction(e -> {
             try {
-                new AluguelApp(alunos, livros).start(new Stage());
+                new AluguelApp(alunos, livros, alugueis).start(new Stage()); // ✅ passando os 3
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

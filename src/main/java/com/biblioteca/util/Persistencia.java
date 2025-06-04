@@ -14,10 +14,19 @@ public class Persistencia {
     }
 
     public static <T> ArrayList<T> carregar(String nomeArquivo) {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(nomeArquivo))) {
+        File arquivo = new File(nomeArquivo);
+
+        if (!arquivo.exists()) {
+            ArrayList<T> novaLista = new ArrayList<>();
+            salvar(nomeArquivo, novaLista);
+            return novaLista;
+        }
+
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
             return (ArrayList<T>) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            return new ArrayList<>();
+            e.printStackTrace();
+            return new ArrayList<>(); // evita crash se der erro
         }
     }
 }
