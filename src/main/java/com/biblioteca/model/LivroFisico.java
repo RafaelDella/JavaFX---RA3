@@ -5,8 +5,8 @@ import java.io.Serializable;
 public class LivroFisico extends Livro implements Serializable {
     private int quantidadeDisponivel;
 
-    public LivroFisico(String titulo, String autor, String genero, int quantidadeDisponivel) {
-        super(titulo, autor, genero);
+    public LivroFisico(String titulo, String autor, String genero, Boolean isFisico, int quantidadeDisponivel) {
+        super(titulo, autor, genero, isFisico);
         this.quantidadeDisponivel = quantidadeDisponivel;
     }
 
@@ -31,16 +31,6 @@ public class LivroFisico extends Livro implements Serializable {
             System.out.println("Livro indisponível para aluguel.");
         }
     }
-
-    @Override
-    public void exibirDetalhes() {
-        System.out.println("--------------------");
-        System.out.println("Título: "  + getTitulo());
-        System.out.println("Autor: "  + getAutor());
-        System.out.println("Gênero: " + getGenero());
-        System.out.println("Quantidade disponível: " + quantidadeDisponivel);
-    }
-
     public boolean getDisponibilidade() {
         return quantidadeDisponivel > 0;
     }
@@ -49,4 +39,9 @@ public class LivroFisico extends Livro implements Serializable {
     public String toString() {
         return getTitulo() + " - " + getAutor() + " (" + quantidadeDisponivel + " disponíveis)";
     }
+
+    public void devolverLivro() {
+        this.quantidadeDisponivel++;
+    }
+
 }

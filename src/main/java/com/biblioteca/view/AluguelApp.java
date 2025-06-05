@@ -34,8 +34,8 @@ public class AluguelApp extends Application {
         atualizarComboLivros(livroCombo);
 
         Button alugarBtn = new Button("Realizar Aluguel");
-        Button editarBtn = new Button("Editar Selecionado"); // ✅
-        Button removerBtn = new Button("Remover Selecionado"); // ✅
+        Button editarBtn = new Button("Editar Selecionado");
+        Button removerBtn = new Button("Remover Selecionado");
 
         alugarBtn.setOnAction(e -> {
             Aluno aluno = alunoCombo.getValue();
@@ -46,8 +46,12 @@ public class AluguelApp extends Application {
                 return;
             }
 
+            if (contarAlugueisDoAluno(aluno) >= 3) {
+                mostrarAlerta("Este aluno já possui o limite de 3 livros alugados.");
+                return;
+            }
+
             aluno.alugarLivro(livro);
-            livro.alugarLivro();
 
             Aluguel novoAluguel = new Aluguel(aluno, livro);
             alugueis.add(novoAluguel);
@@ -57,10 +61,17 @@ public class AluguelApp extends Application {
             atualizarComboLivros(livroCombo);
         });
 
-        // ✅ Remover selecionado
         removerBtn.setOnAction(e -> {
             int index = alugueisListView.getSelectionModel().getSelectedIndex();
             if (index >= 0) {
+                Aluguel aluguel = alugueis.get(index);
+                Livro livro = aluguel.getLivro();
+
+                // Marca como devolvido
+                if (livro instanceof LivroFisico lf) {
+                    lf.devolverLivro();
+                }
+
                 alugueis.remove(index);
                 Persistencia.salvar("alugueis.dat", alugueis);
                 atualizarListaAlugueis();
@@ -70,7 +81,7 @@ public class AluguelApp extends Application {
             }
         });
 
-        // ✅ Editar selecionado
+
         editarBtn.setOnAction(e -> {
             int index = alugueisListView.getSelectionModel().getSelectedIndex();
             if (index >= 0) {
@@ -108,7 +119,6 @@ public class AluguelApp extends Application {
 
         atualizarListaAlugueis();
 
-        // ✅ Salvar ao fechar
         stage.setOnCloseRequest(event -> {
             Persistencia.salvar("alugueis.dat", alugueis);
         });
@@ -117,7 +127,11 @@ public class AluguelApp extends Application {
     private void atualizarListaAlugueis() {
         alugueisListView.getItems().clear();
         for (Aluguel a : alugueis) {
-            alugueisListView.getItems().add(a.getAluno().getNome() + " → " + a.getLivro().getTitulo());
+            alugueisListView.getItems().add(
+                    a.getAluno().getNome() + " → " +
+                            a.getLivro().getTitulo() + " -> " +
+                            (a.getLivro().getIsFisico() ? "Livro físico" : "Livro digital")
+            );
         }
     }
 
@@ -138,5 +152,15 @@ public class AluguelApp extends Application {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private int contarAlugueisDoAluno(Aluno aluno) {
+        int count = 0;
+        for (Aluguel aluguel : alugueis) {
+            if (aluguel.getAluno().equals(aluno)) {
+                count++;
+            }
+        }
+        return count;
     }
 }

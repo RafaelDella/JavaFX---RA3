@@ -6,20 +6,21 @@ public abstract class Livro implements Serializable {
     protected String titulo;
     protected String autor;
     protected String genero;
+    protected Boolean isFisico;
 
-    public Livro(String titulo, String autor, String genero) {
+    public Livro(String titulo, String autor, String genero,  Boolean isFisico) {
         this.titulo = titulo;
         this.autor = autor;
         this.genero = genero;
+        this.isFisico = isFisico;
     }
 
-    public void alugarLivro(){
 
-    }
+    public abstract void alugarLivro();
 
     @Override
     public String toString() {
-        return titulo + " - " + autor;
+        return titulo + " - " + autor + " - " + genero;
     }
 
     public String getTitulo() {
@@ -34,6 +35,5 @@ public abstract class Livro implements Serializable {
         return genero;
     }
 
-    public abstract void exibirDetalhes();
-
+    public Boolean getIsFisico() {return isFisico;}
 }

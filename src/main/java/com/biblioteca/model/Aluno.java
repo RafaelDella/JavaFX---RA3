@@ -1,6 +1,5 @@
 package com.biblioteca.model;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 public class Aluno implements Pessoa, Serializable {
@@ -18,7 +17,7 @@ public class Aluno implements Pessoa, Serializable {
 
     @Override
     public void alugarLivro(Livro livro) {
-        if (livrosAlugados < limiteLivros && livro instanceof LivroFisico livroFisico && livroFisico.getQuantidadeDisponivel() > 0) {
+        if (livrosAlugados <= limiteLivros && livro instanceof LivroFisico livroFisico && livroFisico.getQuantidadeDisponivel() > 0) {
             livrosAlugados++;
             livroFisico.decrementarQuantidade();
             System.out.println(nome + " alugou o livro: " + livro.getTitulo());
@@ -29,7 +28,7 @@ public class Aluno implements Pessoa, Serializable {
 
     @Override
     public String toString() {
-        return nome; // ou: return nome + " (" + cpf + ")";
+        return nome; // ou return nome + " - " + curso; se quiser mais informações
     }
 
     public String getNome() {
@@ -44,10 +43,5 @@ public class Aluno implements Pessoa, Serializable {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    // Getters e setters, se necessário
 }
 

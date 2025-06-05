@@ -45,12 +45,22 @@
                 String curso = cursoField.getText();
 
                 if (!nome.isEmpty() && !cpf.isEmpty() && !curso.isEmpty()) {
+                    if (cpf.length() != 11 || !cpf.matches("\\d{11}")) {
+                        mostrarAlerta("O CPF deve conter exatamente 11 dígitos numéricos.");
+                        return;
+                    }
+
+                    if (cpfJaExiste(cpf)) {
+                        mostrarAlerta("Já existe um aluno cadastrado com esse CPF.");
+                        return;
+                    }
+
                     Aluno aluno = new Aluno(nome, cpf, curso);
                     alunos.add(aluno);
-                    atualizarLista();
                     nomeField.clear();
                     cpfField.clear();
                     cursoField.clear();
+                    atualizarLista();
                 } else {
                     mostrarAlerta("Preencha todos os campos.");
                 }
@@ -81,9 +91,25 @@
                         String curso = cursoField.getText();
 
                         if (!nome.isEmpty() && !cpf.isEmpty() && !curso.isEmpty()) {
+                            // Validação de CPF
+                            if (cpf.length() != 11 || !cpf.matches("\\d{11}")) {
+                                mostrarAlerta("O CPF deve conter exatamente 11 dígitos numéricos.");
+                                return;
+                            }
+
+                            // Verifica se o CPF já existe em outro aluno
+                            for (int i = 0; i < alunos.size(); i++) {
+                                if (i != indexEdicao && alunos.get(i).getCpf().equals(cpf)) {
+                                    mostrarAlerta("Já existe outro aluno com esse CPF.");
+                                    return;
+                                }
+                            }
+
+                            // Atualiza aluno
                             Aluno alunoEditado = new Aluno(nome, cpf, curso);
                             alunos.set(indexEdicao, alunoEditado);
                             atualizarLista();
+
                             nomeField.clear();
                             cpfField.clear();
                             cursoField.clear();
@@ -98,6 +124,7 @@
                     mostrarAlerta("Selecione um aluno para editar.");
                 }
             });
+
 
             VBox form = new VBox(10, nomeField, cpfField, cursoField, adicionarBtn, editarBtn, removerBtn);
             HBox layout = new HBox(20, form, listView);
@@ -123,5 +150,14 @@
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText(msg);
             alert.showAndWait();
+        }
+
+        private boolean cpfJaExiste(String cpf) {
+            for (Aluno aluno : alunos) {
+                if (aluno.getCpf().equals(cpf)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
