@@ -28,7 +28,7 @@ public class Aluno implements Pessoa, Serializable {
 
     @Override
     public String toString() {
-        return nome; // ou return nome + " - " + curso; se quiser mais informações
+        return nome; // return informações
     }
 
     public String getNome() {
